@@ -4,7 +4,9 @@ import { Box, Button, CardMedia, Grid, Link, Typography } from '@mui/material';
 import { initialData } from '../../database/products';
 import { ItemCounter } from '../ui';
 
-interface Props {}
+interface Props {
+    editable?: boolean;
+}
 
 const productsInCart = [
     initialData.products[0],
@@ -12,7 +14,7 @@ const productsInCart = [
     initialData.products[2],
     initialData.products[3],
 ];
-export const CartList: FC<Props> = () => {
+export const CartList: FC<Props> = ({ editable = false }) => {
     return (
         <>
             {productsInCart.map((product) => (
@@ -32,16 +34,18 @@ export const CartList: FC<Props> = () => {
                         <Box display="flex" flexDirection="column">
                             <Typography variant="body1">{product.title}</Typography>
                             <Typography variant="body1">
-                                Talla:<strong>M</strong>
+                                Talla: <strong>M</strong>
                             </Typography>
-                            <ItemCounter />
+                            {editable ? <ItemCounter /> : <Typography variant="h4">3</Typography>}
                         </Box>
                     </Grid>
                     <Grid item xs={2} display="flex" alignItems="center" flexDirection="column">
                         <Typography variant="subtitle1">{`$${product.price}`}</Typography>
-                        <Button variant="text" color="secondary">
-                            Remover
-                        </Button>
+                        {editable && (
+                            <Button variant="text" color="secondary">
+                                Remover
+                            </Button>
+                        )}
                     </Grid>
                 </Grid>
             ))}
