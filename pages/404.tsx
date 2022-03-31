@@ -1,5 +1,4 @@
 import { Box, Typography } from '@mui/material';
-import Image from 'next/image';
 import { ShopLayout } from '../components/layouts';
 
 const PageNotFound = () => {
