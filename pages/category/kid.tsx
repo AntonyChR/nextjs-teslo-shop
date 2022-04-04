@@ -1,17 +1,17 @@
 import type { NextPage } from 'next';
 import { Typography } from '@mui/material';
-import { ShopLayout } from '../components/layouts';
-import { ProductList } from '../components/products';
+import { ShopLayout } from '../../components/layouts';
+import { ProductList } from '../../components/products';
+import { useProducts } from '../../hooks';
+import { FullScreenLoading } from '../../components/ui';
 
-import { useProducts } from '../hooks';
-import { FullScreenLoading } from '../components/ui';
-const Home: NextPage = () => {
-    const { products, isLoading } = useProducts('/products');
+const KidPage: NextPage = () => {
+    const { products, isLoading } = useProducts('/products?gender=kid');
 
     return (
-        <ShopLayout title="ICR-Shop" pageDescription="Esta es una tienda">
+        <ShopLayout title="ICR-Shop | kids" pageDescription="Productos para niños">
             <Typography variant="h1" component="h1">
-                Tienda
+                Niños
             </Typography>
             <Typography variant="h2" sx={{ mb: 1 }}>
                 Todos los productos
@@ -22,4 +22,4 @@ const Home: NextPage = () => {
     );
 };
 
-export default Home;
+export default KidPage;
