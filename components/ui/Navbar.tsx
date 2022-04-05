@@ -2,9 +2,12 @@ import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { AppBar, Badge, Box, Button, IconButton, Link, Toolbar, Typography } from '@mui/material';
 import { SearchOutlined, ShoppingCart } from '@mui/icons-material';
+import { UiContext } from '../../context';
+import { useContext } from 'react';
 
 export const Navbar = () => {
     const { asPath } = useRouter();
+    const { toggleSideMenu } = useContext(UiContext);
     const determineColor = (path: string) => (asPath === path ? 'primary' : 'info');
     return (
         <AppBar>
@@ -46,7 +49,7 @@ export const Navbar = () => {
                         </IconButton>
                     </Link>
                 </NextLink>
-                <Button>Menú</Button>
+                <Button onClick={toggleSideMenu}>Menú</Button>
             </Toolbar>
         </AppBar>
     );
