@@ -48,7 +48,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     const isProducts = products.length > 0;
 
     // if products is empty
-    products = await dbProducts.getAllProducts();
+    if (!isProducts) {
+        products = await dbProducts.getAllProducts();
+    }
 
     return {
         props: { products, isProducts, query },

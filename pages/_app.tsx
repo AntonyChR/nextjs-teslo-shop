@@ -4,20 +4,20 @@ import { SWRConfig } from 'swr';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { lightTheme } from '../themes';
 import { UiProvider } from '../context';
+import { CartProvider } from '../context/cart';
 
 function MyApp({ Component, pageProps }: AppProps) {
+    const fetcher = (resource: any, init: any) => fetch(resource, init).then((res) => res.json());
     return (
-        <SWRConfig
-            value={{
-                fetcher: (resource, init) => fetch(resource, init).then((res) => res.json()),
-            }}
-        >
-            <UiProvider>
-                <ThemeProvider theme={lightTheme}>
-                    <CssBaseline />
-                    <Component {...pageProps} />
-                </ThemeProvider>
-            </UiProvider>
+        <SWRConfig value={{ fetcher }}>
+            <CartProvider>
+                <UiProvider>
+                    <ThemeProvider theme={lightTheme}>
+                        <CssBaseline />
+                        <Component {...pageProps} />
+                    </ThemeProvider>
+                </UiProvider>
+            </CartProvider>
         </SWRConfig>
     );
 }
