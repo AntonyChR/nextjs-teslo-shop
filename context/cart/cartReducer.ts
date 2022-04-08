@@ -1,17 +1,39 @@
-import { ICartProduct } from "../../interfaces"
+import { CartActionType } from "./cartActionTypes"
 import { CartState } from "./CartProvider"
 
-type CartActionType = 
-    | {type:'cart - Load from cookies | storage'}
-    | {type:'cart - Add item', payload: ICartProduct}
 
 
-export const cartReducer = (state: CartState, action: CartActionType):CartState =>{
+export const cartReducer = (state: CartState, action: CartActionType): CartState => {
 
-    switch(action.type){
-        case 'cart - Load from cookies | storage':
+    switch (action.type) {
+        case 'cart - load from cookies':
             return {
                 ...state,
+                cart: action.payload
+            }
+        case 'cart - update products':
+            return {
+                ...state,
+                cart: action.payload
+            }
+        case 'cart - change product quantity':
+            return {
+                ...state,
+                cart: state.cart.map(product => {
+                    if (product._id !== action.payload._id) return product;
+                    if (product.size !== action.payload.size) return product;
+                    return action.payload;
+                })
+            }
+        case 'cart - remove product':
+            return {
+                ...state,
+                cart: action.payload
+            }
+        case 'cart - update order summary':
+            return {
+                ...state,
+                ...action.payload
             }
         default:
             return state

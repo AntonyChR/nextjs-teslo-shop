@@ -1,14 +1,42 @@
-import { NextPage } from 'next';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { useContext, useState } from 'react';
+import { useRouter } from 'next/router';
+import { NextPage,GetStaticPaths ,GetStaticProps} from 'next';
+
+import { Box, Button, Chip, Grid, Typography } from '@mui/material';
+
+import { dbProducts } from '../../database';
+import { CartContext } from '../../context/cart';
 import { ShopLayout } from '../../components/layouts';
 import { ProductSlideShow, SizeSelector } from '../../components/products';
 import { ItemCounter } from '../../components/ui';
-import { IProduct } from '../../interfaces';
+import { ICartProduct, IProduct, ISize } from '../../interfaces';
 
 interface Props {
     product: IProduct;
 }
 const ProductPage: NextPage<Props> = ({ product }) => {
+    const router = useRouter();
+    const {addProductToCart} =useContext(CartContext);
+    const initialState = {
+        _id: product._id,
+        image: product.images[0],
+        price: product.price,
+        size: undefined,
+        slug: product.slug,
+        title: product.title,
+        gender: product.gender,
+        quantity: 1,
+    };
+    const [tempCartProduct, setTempCartProduct] = useState<ICartProduct>(initialState);
+    const selectedSize = (size: ISize) => {
+        setTempCartProduct((prev) => ({ ...prev, size }));
+    };
+    const updateQuantity = (quantity: number) => {
+        setTempCartProduct((prev) => ({ ...prev, quantity }));
+    };
+    const addToCart = () => {
+        addProductToCart(tempCartProduct);
+    };
     return (
         <ShopLayout title={product.title} pageDescription={product.description}>
             <Grid container spacing={3}>
@@ -25,14 +53,30 @@ const ProductPage: NextPage<Props> = ({ product }) => {
                         </Typography>
                         <Box sx={{ my: 2 }}>
                             <Typography variant="subtitle2">Cantidad</Typography>
-                            <ItemCounter />
-                            <SizeSelector selectedSize={product.sizes[1]} sizes={product.sizes} />
+                            <ItemCounter
+                                currentValue={tempCartProduct.quantity}
+                                updatedQuantity={updateQuantity}
+                                maxValue={product.inStock}
+                            />
+                            <SizeSelector
+                                selectedSize={tempCartProduct.size}
+                                sizes={product.sizes}
+                                onSelectedSize={selectedSize}
+                            />
                         </Box>
-                        <Button color="secondary" className="circular-btn">
-                            Agregar al carrito
-                        </Button>
-                        {/* <Chip label='Agotado' color='error' variant='outlined'/> */}
-                        <Box sx={{ my: 2 }}>
+                        {product.inStock ? (
+                            <Button
+                                disabled={!tempCartProduct.size}
+                                onClick={addToCart}
+                                color="secondary"
+                                className="circular-btn"
+                            >
+                                {tempCartProduct.size ? 'Agregar al carrito' : 'Seleccione una talla'}
+                            </Button>
+                        ) : (
+                            <Chip label="Agotado" color="error" variant="filled" />
+                        )}
+                        <Box sx={{ mt: 3 }}>
                             <Typography variant="subtitle2">Descripción</Typography>
                             <Typography variant="body2">{product.description}</Typography>
                         </Box>
@@ -45,7 +89,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
 
 // You should use getServerSideProps when:
 // - Only if you need to pre-render a page whose data must be fetched at request time
-import { dbProducts } from '../../database';
+
 
 //SSR
 /* import { GetServerSideProps } from 'next';
@@ -69,7 +113,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 }; */
 
 // You should use getStaticPaths if you’re statically pre-rendering pages that use dynamic routes
-import { GetStaticPaths } from 'next';
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
     const productSlugs = await dbProducts.getAllProductSlugs();
@@ -85,7 +128,7 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 //- The data comes from a headless CMS.
 //- The data can be publicly cached (not user-specific).
 //- The page must be pre-rendered (for SEO) and be very fast — getStaticProps generates HTML and JSON files, both of which can be cached by a CDN for performance.
-import { GetStaticProps } from 'next';
+
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
     const { slug = '' } = params as { slug: string }; // your fetch function here
@@ -100,8 +143,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         };
     }
     return {
-        props: {product},
-        revalidate: 86400
+        props: { product },
+        revalidate: 86400,
     };
 };
 export default ProductPage;
