@@ -1,12 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { db, seedDatabase } from '../../database'
-import { Product } from '../../models'
+import { Product, User } from '../../models'
 
 type Data = {
     message: string
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+    
     if (process.env.NODE_ENV === 'production') {
         return res.status(401).json({
             message: 'this endpoint is only available in development mode'
@@ -14,8 +15,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
 
     await db.connect();
+
+    //inser products
     await Product.deleteMany();
     await Product.insertMany(seedDatabase.initialData.products);
+
+    //insert users
+    await User.deleteMany();
+    await User.insertMany(seedDatabase.initialData.users);
+
     await db.disconnect();
-    res.status(200).json({ message: 'database was restored' })
+    res.status(200).json({ message: 'database was restored' });
 }
