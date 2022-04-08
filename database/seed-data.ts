@@ -48,7 +48,7 @@ export const initialData: SeedData = {
         },
         {
             name    : 'client4',
-            email   : 'client5@email.com',
+            email   : 'client4@email.com',
             password: '123456',
             role    : 'client'
         },
@@ -850,5 +850,4 @@ export const initialData: SeedData = {
             gender: 'kid'
         },
     ]
-
 }
