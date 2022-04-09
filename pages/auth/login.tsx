@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
+import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 import { Box, Button, Chip, Grid, Link, TextField, Typography } from '@mui/material';
+import { ErrorOutline } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 
+import {AuthContext} from '../../context';
 import { AuthLayout } from '../../components/layouts/AuthLayout';
 import { validations } from '../../utils';
-import { tesloApi } from '../../api';
-import { ErrorOutline } from '@mui/icons-material';
 
 type FormData = {
     email: string;
@@ -15,6 +16,8 @@ type FormData = {
 };
 
 const LoginPage = () => {
+    const router = useRouter();
+    const {loginUser} = useContext(AuthContext);
     const [showError, setShowError] = useState<boolean>(false);
 
     const {
@@ -25,14 +28,13 @@ const LoginPage = () => {
 
     const onLoginUser = async ({ email, password }: FormData) => {
         setShowError(false);
-        try {
-            const { data } = await tesloApi.post('/user/login', { email, password });
-            const { token, user } = data;
-            console.log({ token, user });
-        } catch (error) {
+        const isValidLogin = await loginUser(email, password);
+        if (!isValidLogin) {
             setShowError(true);
-            console.log(error);
+            setTimeout(()=>setShowError(false),3000);
+            return;
         }
+        router.replace('/');
     };
     return (
         <AuthLayout title="Ingresar">

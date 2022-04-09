@@ -1,5 +1,5 @@
 import { FC, useEffect, useReducer } from 'react';
-import { cartReducer, CartContext, action } from './';
+import { cartReducer, CartContext, CartActions } from './';
 import { ICartProduct } from '../../interfaces';
 import Cookie from 'js-cookie';
 
@@ -26,9 +26,9 @@ export const CartProvider: FC = ({ children }) => {
     useEffect(() => {
         try {
             const productsfromCookies = JSON.parse(Cookie.get('cart') || '[]');
-            dispatch(action.loadFromCookies(productsfromCookies));
+            dispatch(CartActions.loadFromCookies(productsfromCookies));
         } catch (error) {
-            dispatch(action.loadFromCookies([]));
+            dispatch(CartActions.loadFromCookies([]));
             console.warn('Error loading cart from cookies');
         }
     }, []);
@@ -48,19 +48,19 @@ export const CartProvider: FC = ({ children }) => {
             tax: parseFloat((subTotal * TAX_RATE).toFixed(2)),
             total: parseFloat((subTotal * (1 + TAX_RATE)).toFixed(2)),
         };
-        dispatch(action.updateOrderSummary(orderSummary));
+        dispatch(CartActions.updateOrderSummary(orderSummary));
     }, [state.cart]);
 
     // ------------------------ change cart state-----------------------------
     const addProductToCart = (product: ICartProduct) => {
         const isProductInCart = state.cart.some((p) => p._id === product._id);
         if (isProductInCart === false) {
-            return dispatch(action.updateProducts([...state.cart, product]));
+            return dispatch(CartActions.updateProducts([...state.cart, product]));
         }
 
         const productInCartButDifferentSize = state.cart.some((p) => p._id === product._id && p.size === product.size);
         if (productInCartButDifferentSize === false) {
-            return dispatch(action.updateProducts([...state.cart, product]));
+            return dispatch(CartActions.updateProducts([...state.cart, product]));
         }
 
         const updatedProducts = state.cart.map((p) => {
@@ -70,16 +70,16 @@ export const CartProvider: FC = ({ children }) => {
             p.quantity += product.quantity;
             return p;
         });
-        dispatch(action.updateProducts(updatedProducts));
+        dispatch(CartActions.updateProducts(updatedProducts));
     };
 
     const updateCartQuantity = (product: ICartProduct) => {
-        dispatch(action.updateQuantityProduct(product));
+        dispatch(CartActions.updateQuantityProduct(product));
     };
 
     const removeProductFromCart = (id: string, size: string) => {
         const updatedProducts = state.cart.filter((p) => !(p._id === id && p.size === size));
-        dispatch(action.removeProduct(updatedProducts));
+        dispatch(CartActions.removeProduct(updatedProducts));
     };
     // -----------------------------------------------------------------------
     return (

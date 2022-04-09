@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
+
 import { Box, Button, Chip, Grid, Link, TextField, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { ErrorOutline } from '@mui/icons-material';
 
+import { AuthContext } from '../../context';
 import { AuthLayout } from '../../components/layouts/AuthLayout';
-import { validations } from '../../utils';
 import { tesloApi } from '../../api';
+import { validations } from '../../utils';
 
 type FormData = {
     email: string;
@@ -14,7 +17,12 @@ type FormData = {
     name: string;
 };
 const RegisterPage = () => {
+
+    const router = useRouter();
+    const {registerUser} = useContext(AuthContext);
+
     const [showError, setShowError] = useState<boolean>(false);
+    const [errorMessage, setErrorMessage] = useState<string>('')
 
     const {
         register,
@@ -24,14 +32,15 @@ const RegisterPage = () => {
 
     const onRegisterUser = async ({ email, password, name }: FormData) => {
         setShowError(false);
-        try {
-            const { data } = await tesloApi.post('/user/register', { email, password, name });
-            const { token, user } = data;
-            console.log({ token, user });
-        } catch (error) {
-            setShowError(true);
-            console.log(error);
+        const resp = await registerUser(name,email,password);
+        if(resp.hasError){
+            setShowError(true)
+            setErrorMessage(resp.message!)
+            setTimeout(()=>setShowError(false),3000)
+            return;
         }
+        router.replace('/');
+        
     };
     return (
         <AuthLayout title="Crear cuenta">
