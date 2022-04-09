@@ -13,18 +13,18 @@ interface Props {
 }
 const SearchPage: NextPage<Props> = ({ products, isProducts, query }) => {
     return (
-        <ShopLayout title="ICR-Shop | search" pageDescription="Esta es una tienda">
+        <ShopLayout title="TESLO-Shop | search" pageDescription="Esta es una tienda">
             <Typography variant="h1" component="h1">
                 Busqueda
             </Typography>
             {isProducts ? (
                 <Typography variant="h2" sx={{ mb: 1 }}>
                     Productos encontrados relacionados con el termmino{' '}
-                    <span style={{ fontWeight: 'bold' }}>"{query}"</span>
+                    <span style={{ fontWeight: 'bold' }}>&quot;{query}&quot;</span>
                 </Typography>
             ) : (
                 <Typography variant="h2" sx={{ mb: 1 }}>
-                    No hay productos relacionados con <span style={{ fontWeight: 'bold' }}>"{query}"</span>, pero quiza
+                    No hay productos relacionados con <span style={{ fontWeight: 'bold' }}>&quot;{query}&quot;</span>, pero quiza
                     te interesen:
                 </Typography>
             )}

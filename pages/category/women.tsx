@@ -9,7 +9,7 @@ const WomenPage: NextPage = () => {
     const { products, isLoading } = useProducts('/products?gender=women');
 
     return (
-        <ShopLayout title="ICR-Shop | women" pageDescription="Productos para mujeres">
+        <ShopLayout title="TESLO-Shop | women" pageDescription="Productos para mujeres">
             <Typography variant="h1" component="h1">
                 Mujeres
             </Typography>

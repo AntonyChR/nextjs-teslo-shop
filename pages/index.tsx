@@ -9,7 +9,7 @@ const Home: NextPage = () => {
     const { products, isLoading } = useProducts('/products');
 
     return (
-        <ShopLayout title="ICR-Shop" pageDescription="Esta es una tienda">
+        <ShopLayout title="TESLO-Shop" pageDescription="Esta es una tienda">
             <Typography variant="h1" component="h1">
                 Tienda
             </Typography>

@@ -9,7 +9,7 @@ const KidPage: NextPage = () => {
     const { products, isLoading } = useProducts('/products?gender=kid');
 
     return (
-        <ShopLayout title="ICR-Shop | kids" pageDescription="Productos para niños">
+        <ShopLayout title="TESLO-Shop | kids" pageDescription="Productos para niños">
             <Typography variant="h1" component="h1">
                 Niños
             </Typography>
