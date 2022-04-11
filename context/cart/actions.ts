@@ -1,11 +1,11 @@
 import { CartActionType } from "./";
-import { ICartProduct } from "../../interfaces";
+import { AddressUserFormData, ICartProduct } from "../../interfaces";
 
 const updateProducts = (products:ICartProduct[]):CartActionType =>{
     return {type:'cart - update products', payload:products};
 };
 
-const loadFromCookies = (products:ICartProduct[]):CartActionType =>{
+const loadProductsFromCookies = (products:ICartProduct[]):CartActionType =>{
     return {type:'cart - load from cookies', payload:products};
 }
 
@@ -21,11 +21,16 @@ const updateOrderSummary =  (orderSummary:any):CartActionType => {
     return {type:'cart - update order summary', payload:orderSummary};
 }
 
+const loadAddress = (address:AddressUserFormData):CartActionType => {
+    return {type:"cart - load addres from cookies",payload:address}
+}
+
 //export functions
 export default {
     updateProducts,
-    loadFromCookies,
+    loadProductsFromCookies,
     updateQuantityProduct,
     removeProduct,
-    updateOrderSummary
+    updateOrderSummary,
+    loadAddress
 }

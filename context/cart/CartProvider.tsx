@@ -1,22 +1,28 @@
 import { FC, useEffect, useReducer } from 'react';
 import { cartReducer, CartContext, CartActions } from './';
-import { ICartProduct } from '../../interfaces';
+import { AddressUserFormData, ICartProduct } from '../../interfaces';
 import Cookie from 'js-cookie';
+import { getAddressFromCookies } from '../../utils';
+import Cookies from 'js-cookie';
 
 export interface CartState {
+    isLoaded:boolean,
     cart: ICartProduct[];
     numberOfItems: number;
     subTotal: number;
     tax: number;
     total: number;
+    shippingAdderss?:AddressUserFormData;
 }
 
 const CART_INITIAL_STATE: CartState = {
+    isLoaded:false,
     cart: [],
     numberOfItems: 0,
     subTotal: 0,
     tax: 0,
     total: 0,
+    shippingAdderss: undefined
 };
 
 export const CartProvider: FC = ({ children }) => {
@@ -25,13 +31,18 @@ export const CartProvider: FC = ({ children }) => {
     // Load cart from cookies
     useEffect(() => {
         try {
-            const productsfromCookies = JSON.parse(Cookie.get('cart') || '[]');
-            dispatch(CartActions.loadFromCookies(productsfromCookies));
+            const products = JSON.parse(Cookie.get('cart') || '[]');
+            dispatch(CartActions.loadProductsFromCookies(products));
         } catch (error) {
-            dispatch(CartActions.loadFromCookies([]));
+            dispatch(CartActions.loadProductsFromCookies([]));
             console.warn('Error loading cart from cookies');
         }
     }, []);
+
+    useEffect(()=>{
+        const address = getAddressFromCookies();
+        dispatch(CartActions.loadAddress(address));
+    },[])
 
     // Save cart to cookies
     useEffect(() => {
@@ -81,6 +92,18 @@ export const CartProvider: FC = ({ children }) => {
         const updatedProducts = state.cart.filter((p) => !(p._id === id && p.size === size));
         dispatch(CartActions.removeProduct(updatedProducts));
     };
+
+    const updateAddresss = (address: AddressUserFormData) => {
+        Cookies.set('firstName',address.firstName);
+        Cookies.set('lastName',address.lastName);
+        Cookies.set('address1',address.address1);
+        Cookies.set('address2',address.address2 || '');
+        Cookies.set('postalCode',address.postalCode);
+        Cookies.set('city',address.city);
+        Cookies.set('country',address.country);
+        Cookies.set('phone',address.phone);
+        dispatch(CartActions.loadAddress(address));
+    }
     // -----------------------------------------------------------------------
     return (
         <CartContext.Provider
@@ -90,6 +113,7 @@ export const CartProvider: FC = ({ children }) => {
                 addProductToCart,
                 updateCartQuantity,
                 removeProductFromCart,
+                updateAddresss
             }}
         >
             {children}
