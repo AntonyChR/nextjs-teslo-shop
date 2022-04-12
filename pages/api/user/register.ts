@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import bcrypt from 'bcryptjs';
 
 import { db } from '../../../database';
 import { User } from '../../../models';
-import { encrypt, jwt, validations } from '../../../utils';
+import { jwt, validations } from '../../../utils';
 
 type Data =
     | { message: string }
@@ -36,7 +37,7 @@ async function registerUser(req: NextApiRequest, res: NextApiResponse<Data>) {
 
     const newUser = new User({
         email: email.toLocaleLowerCase(),
-        password: encrypt(password),
+        password: bcrypt.hashSync(password),
         name,
         role: 'client'
     })

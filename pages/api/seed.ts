@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { db, seedDatabase } from '../../database'
 import { Product, User } from '../../models'
-import { encrypt, encryptObjectField } from '../../utils'
 
 type Data = {
     message: string
@@ -23,7 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     //insert users
     await User.deleteMany();
-    const usersWidthEncrytedPassword = seedDatabase.initialData.users.map(user => encryptObjectField(user, 'password'));
+    const usersWidthEncrytedPassword = seedDatabase.initialData.users;
 
     await User.insertMany(usersWidthEncrytedPassword);
 

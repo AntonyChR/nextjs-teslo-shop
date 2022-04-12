@@ -14,25 +14,30 @@ export const signToken = (_id: string, email: string) => {
 
 export const isValidToken = (token: string): Promise<string> => {
     const SECRET_SEED = process.env.JWR_SECRET_SEED;
-    if (!SECRET_SEED) {
-        throw new Error('error getting seed');
+    if ( !SECRET_SEED ) {
+        throw new Error('Invalid seed');
     }
 
-    if (token.length <= 10) {
-        return Promise.reject('token is not valid');
+    if ( token.length <= 10 ) {
+        return Promise.reject('invalid token');
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise( (resolve, reject) => {
+
         try {
-            jwt.verify(token, SECRET_SEED || '', (error, payload) => {
-                if (error) return reject('Invalid token');
+            jwt.verify( token, SECRET_SEED || '', (err, payload) => {
+                if ( err ) return reject('invalid token');
+
                 const { _id } = payload as { _id: string };
+
                 resolve(_id);
-            });
+
+            })
         } catch (error) {
-            console.log(error)
-            reject('Invalid token');
+            reject('invalid token');
         }
+
+
     })
 
 }
