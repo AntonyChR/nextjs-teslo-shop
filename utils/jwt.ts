@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken'; 
 
 export const signToken = (_id: string, email: string) => {
     const SECRET_SEED = process.env.JWR_SECRET_SEED;
