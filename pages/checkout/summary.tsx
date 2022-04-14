@@ -1,5 +1,8 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
+
+import Cookies from 'js-cookie';
 import { Box, Button, Card, CardContent, Divider, Grid, Typography, Link } from '@mui/material';
 import { CartList, OrderSummary } from '../../components/cart';
 import { ShopLayout } from '../../components/layouts';
@@ -7,8 +10,12 @@ import { CartContext } from '../../context';
 import { countries } from '../../utils';
 
 const SummaryPage = () => {
-    const { shippingAdderss,numberOfItems} = useContext(CartContext);
-    if(!shippingAdderss) return <></>;
+    const router = useRouter();
+    const { shippingAdderss, numberOfItems } = useContext(CartContext);
+    useEffect(() => {
+        if (Cookies.get('firstName')) router.push('/checkout/address');
+    }, [router]);
+    if (!shippingAdderss) return <></>;
     const { address1, address2, phone, city, firstName, country, lastName, postalCode } = shippingAdderss;
     return (
         <ShopLayout title="Resumen de compra" pageDescription="Resumen de compra">
@@ -22,7 +29,9 @@ const SummaryPage = () => {
                 <Grid item xs={12} sm={5}>
                     <Card className="summary-card" elevation={0}>
                         <CardContent>
-                            <Typography variant="h2">Resumen ({numberOfItems} Producto{numberOfItems>=2?'s':''})</Typography>
+                            <Typography variant="h2">
+                                Resumen ({numberOfItems} Producto{numberOfItems >= 2 ? 's' : ''})
+                            </Typography>
                             <Divider sx={{ my: 1 }} />
                             <Box display="flex" justifyContent="space-between">
                                 <Typography variant="subtitle1">Dirección de entrega:</Typography>
@@ -34,11 +43,12 @@ const SummaryPage = () => {
                                 {firstName}, {lastName}
                             </Typography>
                             <Typography>
-                            {address1}, {postalCode}
+                                {address1}, {postalCode}
                             </Typography>
                             <Typography>{city}</Typography>
                             {address2 && <Typography>{address2}</Typography>}
-                            <Typography>{countries.find(c=> c.code===country)?.name}</Typography>
+                            {/* <Typography>{countries.find(c=> c.code===country)?.name}</Typography> */}
+                            <Typography>{country}</Typography>
                             <Typography>{phone}</Typography>
                             <Divider sx={{ my: 1 }} />
                             <Box display="flex" justifyContent="space-between">

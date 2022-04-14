@@ -1,7 +1,6 @@
 import { FC, useEffect, useReducer } from 'react';
-import { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
-import {useSession} from 'next-auth/react';
+import {signOut, useSession} from 'next-auth/react';
 
 import { IUser } from '../../interfaces';
 import { authReducer, AuthContext, authActions } from './';
@@ -19,18 +18,17 @@ const AUTH_INITIAL_STATE: AuthState = {
 };
 
 export const AuthProvider: FC = ({ children }) => {
-    const router = useRouter();
     const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
     const {data,status} = useSession();
-
+    
     useEffect(()=>{
+        console.log(status)
         if(status==='authenticated'){
-            // dispatch(authActions.login(data.user));
-            console.log('te has logueao')
-            console.log(data)
+            dispatch(authActions.login(data.user));
         }
     },[data,status])
-/* 
+    /* 
+    const router = useRouter();
     const checkToken = async() => {
         if(!Cookies.get('token')) return;
         try{
@@ -89,7 +87,6 @@ export const AuthProvider: FC = ({ children }) => {
     };
 
     const logout = () => {
-        Cookies.remove('token');
         Cookies.remove('firstName');
         Cookies.remove('lastName');
         Cookies.remove('address1');
@@ -99,7 +96,7 @@ export const AuthProvider: FC = ({ children }) => {
         Cookies.remove('country');
         Cookies.remove('phone');
         Cookies.remove('cart');
-        router.reload();
+        signOut();
     }
 
     return (
