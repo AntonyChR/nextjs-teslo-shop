@@ -1,9 +1,10 @@
 import { FC, useEffect, useReducer } from 'react';
 import { cartReducer, CartContext, CartActions } from './';
-import { AddressUserFormData, ICartProduct } from '../../interfaces';
+import { AddressUserFormData, ICartProduct, IOrder } from '../../interfaces';
 import Cookie from 'js-cookie';
 import { getAddressFromCookies } from '../../utils';
 import Cookies from 'js-cookie';
+import { tesloApi } from '../../api';
 
 export interface CartState {
     isLoaded:boolean,
@@ -105,6 +106,28 @@ export const CartProvider: FC = ({ children }) => {
         dispatch(CartActions.loadAddress(address));
     }
     // -----------------------------------------------------------------------
+
+    const createOrder = async () => {
+
+        if(!state.shippingAdderss) throw new Error('No shipping address');
+
+        const body:IOrder = {
+            orderItems: state.cart.map(p=>({...p, size: p.size!})),
+            shippingAddress: state.shippingAdderss,
+            numberOfItems: state.numberOfItems,
+            subTotal: state.subTotal,
+            tax: state.tax,
+            total: state.total,
+            isPaid: false            
+        }
+        
+        try {
+            const {data} = await tesloApi.post('/orders',body)
+            console.log(data)
+        } catch(error) {
+            console.log(error)
+        }
+    }
     return (
         <CartContext.Provider
             value={{
@@ -113,7 +136,8 @@ export const CartProvider: FC = ({ children }) => {
                 addProductToCart,
                 updateCartQuantity,
                 removeProductFromCart,
-                updateAddresss
+                updateAddresss,
+                createOrder
             }}
         >
             {children}
