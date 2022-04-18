@@ -1,6 +1,13 @@
 import { ISize } from "./products";
 import { IUser } from "./user";
-
+export interface IOrdersHistory{
+    _id            : string;
+    isPaid         : boolean;
+    shippingAddress: {
+        firstName  : string;
+        lastName   : string;
+    }
+}
 export interface IOrder {
     _id?           : string;
     user?          : IUser | string;

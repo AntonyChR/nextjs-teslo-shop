@@ -42,8 +42,7 @@ const createOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         const TAX_RATE = Number(process.env.TAX_RATE || 0);
 
         const backendTotal = subTotalFromdb * (TAX_RATE + 1 );
-
-        if(total !== backendTotal) {
+        if(Math.ceil(total) !== Math.ceil(backendTotal)) {
             throw new Error('the value of the quantities is inconsistent');
         }
 

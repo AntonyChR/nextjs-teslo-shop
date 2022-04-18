@@ -5,25 +5,26 @@ import Cookie from 'js-cookie';
 import { getAddressFromCookies } from '../../utils';
 import Cookies from 'js-cookie';
 import { tesloApi } from '../../api';
+import axios from 'axios';
 
 export interface CartState {
-    isLoaded:boolean,
+    isLoaded: boolean;
     cart: ICartProduct[];
     numberOfItems: number;
     subTotal: number;
     tax: number;
     total: number;
-    shippingAdderss?:AddressUserFormData;
+    shippingAdderss?: AddressUserFormData;
 }
 
 const CART_INITIAL_STATE: CartState = {
-    isLoaded:false,
+    isLoaded: false,
     cart: [],
     numberOfItems: 0,
     subTotal: 0,
     tax: 0,
     total: 0,
-    shippingAdderss: undefined
+    shippingAdderss: undefined,
 };
 
 export const CartProvider: FC = ({ children }) => {
@@ -40,10 +41,10 @@ export const CartProvider: FC = ({ children }) => {
         }
     }, []);
 
-    useEffect(()=>{
+    useEffect(() => {
         const address = getAddressFromCookies();
         dispatch(CartActions.loadAddress(address));
-    },[])
+    }, []);
 
     // Save cart to cookies
     useEffect(() => {
@@ -95,39 +96,53 @@ export const CartProvider: FC = ({ children }) => {
     };
 
     const updateAddresss = (address: AddressUserFormData) => {
-        Cookies.set('firstName',address.firstName);
-        Cookies.set('lastName',address.lastName);
-        Cookies.set('address1',address.address1);
-        Cookies.set('address2',address.address2 || '');
-        Cookies.set('postalCode',address.postalCode);
-        Cookies.set('city',address.city);
-        Cookies.set('country',address.country);
-        Cookies.set('phone',address.phone);
+        Cookies.set('firstName', address.firstName);
+        Cookies.set('lastName', address.lastName);
+        Cookies.set('address1', address.address1);
+        Cookies.set('address2', address.address2 || '');
+        Cookies.set('postalCode', address.postalCode);
+        Cookies.set('city', address.city);
+        Cookies.set('country', address.country);
+        Cookies.set('phone', address.phone);
         dispatch(CartActions.loadAddress(address));
-    }
+    };
     // -----------------------------------------------------------------------
 
-    const createOrder = async () => {
+    const createOrder = async (): Promise<{ hasError: boolean; message: string }> => {
+        if (!state.shippingAdderss) throw new Error('No shipping address');
 
-        if(!state.shippingAdderss) throw new Error('No shipping address');
-
-        const body:IOrder = {
-            orderItems: state.cart.map(p=>({...p, size: p.size!})),
+        const body: IOrder = {
+            orderItems: state.cart.map((p) => ({ ...p, size: p.size! })),
             shippingAddress: state.shippingAdderss,
             numberOfItems: state.numberOfItems,
             subTotal: state.subTotal,
             tax: state.tax,
             total: state.total,
-            isPaid: false            
-        }
-        
+            isPaid: false,
+        };
+
         try {
-            const {data} = await tesloApi.post('/orders',body)
-            console.log(data)
-        } catch(error) {
-            console.log(error)
+            const { data } = await tesloApi.post<IOrder>('/orders', body);
+            dispatch(CartActions.orderComplete());
+            return {
+                hasError: false,
+                message: data._id!,
+            };
+        } catch (error) {
+            console.log(error);
+            if (axios.isAxiosError(error)) {
+                return {
+                    hasError: true,
+                    message: error.response?.data.message,
+                };
+            }
+
+            return {
+                hasError: true,
+                message: 'Something went wrong',
+            };
         }
-    }
+    };
     return (
         <CartContext.Provider
             value={{
@@ -137,7 +152,7 @@ export const CartProvider: FC = ({ children }) => {
                 updateCartQuantity,
                 removeProductFromCart,
                 updateAddresss,
-                createOrder
+                createOrder,
             }}
         >
             {children}

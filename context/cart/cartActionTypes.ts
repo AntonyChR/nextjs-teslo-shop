@@ -7,6 +7,7 @@ export type CartActionType =
     | { type: 'cart - remove product', payload: ICartProduct[] }
     | { type: 'cart - load addres from cookies', payload: AddressUserFormData }
     | { type: 'cart - update address', payload: AddressUserFormData }
+    | { type: 'cart - order complete' }
     | {
         type: 'cart - update order summary', payload: {
             numberOfItems: number;
