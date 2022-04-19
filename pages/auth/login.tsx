@@ -107,7 +107,7 @@ const LoginPage = () => {
                         </Grid>
                         <Grid item xs={12} display="flex" flexDirection="column" justifyContent="end">
                             <Divider sx={{ width: '100%', mb: 2 }} />
-                            {Object.values(providers).map((provider: any) => {
+                            {Object.values(providers).forEach((provider: any) => {
                                 if (provider.id === 'credentials') return <div key="credentials"></div>;
                                 return (
                                     <Button
@@ -136,7 +136,7 @@ import { GetServerSideProps } from 'next';
 
 export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
     const session = await getSession({ req });
-    const { p = '' } = query;
+    const { p = '/' } = query;
     if (session) {
         return {
             redirect: {

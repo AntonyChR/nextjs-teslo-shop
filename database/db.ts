@@ -13,7 +13,7 @@ const mongoConnection = {
 export const connect = async() => {
 
     if ( mongoConnection.isConnected ) {
-        console.log('connected');
+        console.log('connected to database');
         return;
     }
 
@@ -42,5 +42,5 @@ export const disconnect = async() => {
     await mongoose.disconnect();
     mongoConnection.isConnected = 0;
 
-    console.log('Disconnected');
+    console.log('Disconnected from MongoDB');
 }

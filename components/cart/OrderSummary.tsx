@@ -4,7 +4,7 @@ import { CartContext } from '../../context/cart';
 import { currency } from '../../utils';
 
 interface Props {
-    orderValues: {
+    orderValues?: {
         numberOfItems: number;
         tax: number;
         subTotal: number;

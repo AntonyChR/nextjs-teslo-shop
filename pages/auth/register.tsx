@@ -127,7 +127,7 @@ import { GetServerSideProps } from 'next'
 export const getServerSideProps: GetServerSideProps = async ({req, query}) => {
 
     const session = await getSession({req})
-    const {p=''} = query;
+    const {p='/'} = query;
     if(session){
         return {
             redirect:{

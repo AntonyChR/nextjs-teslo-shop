@@ -6,6 +6,7 @@ import { IUser } from '../../interfaces';
 import { authReducer, AuthContext, authActions } from './';
 import { tesloApi } from '../../api';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 export interface AuthState {
     isLoggedIn: boolean;
@@ -20,6 +21,7 @@ const AUTH_INITIAL_STATE: AuthState = {
 export const AuthProvider: FC = ({ children }) => {
     const [state, dispatch] = useReducer(authReducer, AUTH_INITIAL_STATE);
     const {data,status} = useSession();
+
     
     useEffect(()=>{
         console.log(status)
@@ -28,7 +30,6 @@ export const AuthProvider: FC = ({ children }) => {
         }
     },[data,status])
     /* 
-    const router = useRouter();
     const checkToken = async() => {
         if(!Cookies.get('token')) return;
         try{
@@ -96,7 +97,7 @@ export const AuthProvider: FC = ({ children }) => {
         Cookies.remove('country');
         Cookies.remove('phone');
         Cookies.remove('cart');
-        signOut();
+        signOut({callbackUrl:'/'});
     }
 
     return (

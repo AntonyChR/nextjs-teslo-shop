@@ -22,6 +22,7 @@ export interface IOrder {
 
     isPaid         : boolean;
     paidAt?        : string;
+    transactionIos?: string;
 }
 
 export interface IOrderItem {
