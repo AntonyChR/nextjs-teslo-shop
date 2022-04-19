@@ -153,7 +153,6 @@ import { dbOrders } from '../../database';
 
 export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
     const { id = '' } = query;
-
     const session: any = await getSession({ req });
 
     if (!session) {
