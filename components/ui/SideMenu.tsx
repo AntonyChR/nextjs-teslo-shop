@@ -146,7 +146,7 @@ export const SideMenu = () => {
                         <Divider />
                     {/* Admin */}
                     {
-                        user?.role === 'admin' && <AdminOptionsMenu/>
+                        user?.role === 'admin' && <AdminOptionsMenu navigateTo={navigateTo}/>
                     }
 
                 </List>

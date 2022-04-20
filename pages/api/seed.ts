@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { db, seedDatabase } from '../../database'
-import { Product, User } from '../../models'
+import { Order, Product, User } from '../../models'
 
 type Data = {
     message: string
@@ -25,6 +25,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const usersWidthEncrytedPassword = seedDatabase.initialData.users;
 
     await User.insertMany(usersWidthEncrytedPassword);
+
+    await Order.deleteMany();
 
     await db.disconnect();
     res.status(200).json({ message: 'database was restored' });

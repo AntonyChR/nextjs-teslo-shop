@@ -9,7 +9,7 @@ import { ErrorOutline } from '@mui/icons-material';
 import { useForm } from 'react-hook-form';
 
 // import {AuthContext} from '../../context';
-import { AuthLayout } from '../../components/layouts/AuthLayout';
+import { AuthLayout } from '../../components/layouts';
 import { validations } from '../../utils';
 
 type FormData = {

@@ -8,8 +8,7 @@ import { useForm } from 'react-hook-form';
 import { ErrorOutline } from '@mui/icons-material';
 
 import { AuthContext } from '../../context';
-import { AuthLayout } from '../../components/layouts/AuthLayout';
-import { tesloApi } from '../../api';
+import { AuthLayout } from '../../components/layouts';
 import { validations } from '../../utils';
 
 type FormData = {
