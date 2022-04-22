@@ -26,7 +26,7 @@ export const AdminOptionsMenu:FC<Props> = ({navigateTo}) => {
                 <ListItemIcon>
                     <CategoryOutlined />
                 </ListItemIcon>
-                <ListItemText primary={'Productos'} />
+                <ListItemText primary={'Products'} />
             </ListItem>
             <ListItem 
                 button
@@ -34,16 +34,17 @@ export const AdminOptionsMenu:FC<Props> = ({navigateTo}) => {
                 <ListItemIcon>
                     <ConfirmationNumberOutlined />
                 </ListItemIcon>
-                <ListItemText primary={'Ordenes'} />
+                <ListItemText primary={'Orders'} />
             </ListItem>
 
             <ListItem 
                 button
+                onClick={()=>navigateTo('/admin/users')}
             >
                 <ListItemIcon>
                     <AdminPanelSettings />
                 </ListItemIcon>
-                <ListItemText primary={'Usuarios'} />
+                <ListItemText primary={'Users'} />
             </ListItem>
         </>
     );
