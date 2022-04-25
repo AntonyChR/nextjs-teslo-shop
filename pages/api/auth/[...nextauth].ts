@@ -11,7 +11,7 @@ export default NextAuth({
     Credentials({
       name: 'Custom Login',
       credentials: {
-        email   : { label: 'Email', type   : 'email', placeholder   : 'Email' },
+        email: { label: 'Email', type: 'email', placeholder: 'Email' },
         password: { label: 'Password', type: 'password', placeholder: 'Password' }
       },
       async authorize(credentials) {
@@ -24,14 +24,14 @@ export default NextAuth({
       clientSecret: process.env.GITHUB_SECRET,
     }),
   ],
-  pages:{
+  pages: {
     signIn: '/auth/login',
     newUser: '/auth/register',
   },
-  jwt:{
+  jwt: {
 
   },
-  session:{
+  session: {
     maxAge: 2592000,
     strategy: 'jwt',
     updateAge: 86400,

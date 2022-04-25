@@ -6,7 +6,7 @@ import { IUser } from '../../interfaces';
 import { authReducer, AuthContext, authActions } from './';
 import { tesloApi } from '../../api';
 import axios from 'axios';
-import { useRouter } from 'next/router';
+//import { useRouter } from 'next/router';
 
 export interface AuthState {
     isLoggedIn: boolean;
@@ -50,6 +50,8 @@ export const AuthProvider: FC = ({ children }) => {
         try {
             const { data } = await tesloApi.post('/user/login', { email, password });
             const { token, user } = data;
+            console.log(data)
+
             Cookies.set('token', token);
             dispatch(authActions.login(user));
             return true;

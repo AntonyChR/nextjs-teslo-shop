@@ -11,6 +11,7 @@ export const checkUserEmailPassword = async(email:string,password:string) => {
     if(!user) return null;
 
     if(!bcrypt.compareSync(password,user.password!)) return null;
+    console.log(user._id)
 
     return {
         _id  : user._id,
