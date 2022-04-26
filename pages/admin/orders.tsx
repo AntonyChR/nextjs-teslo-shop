@@ -24,7 +24,7 @@ const columns:GridColDef[] =[
         field:'check',
         headerName: 'Show Order',
         renderCell: ({row}: GridValueGetterParams)=>{
-            return <a href={`/admin/orders/${row.id}`} target='_blank'>Show Order</a>
+            return <a href={`/admin/orders/${row.id}`} target='_blank' rel="noreferrer">Show Order</a>
         }
     },
     {field:'createdAt', headerName:'Creation Date',width:200},
