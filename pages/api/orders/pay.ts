@@ -76,7 +76,6 @@ const payOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     
     const paypalTotalReported = Number(data.purchase_units[0].amount.value);
     if (paypalTotalReported !== Number(dbOrder.total)) {
-        console.log(typeof paypalTotalReported, ' -  ', typeof dbOrder.total);
         await db.disconnect();
         return res.status(500).json({ message: 'Order total does not match' })
     }

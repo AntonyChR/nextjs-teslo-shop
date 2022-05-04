@@ -50,7 +50,6 @@ export const AuthProvider: FC = ({ children }) => {
         try {
             const { data } = await tesloApi.post('/user/login', { email, password });
             const { token, user } = data;
-            console.log(data)
 
             Cookies.set('token', token);
             dispatch(authActions.login(user));

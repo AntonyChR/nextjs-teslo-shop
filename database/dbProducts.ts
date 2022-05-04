@@ -10,10 +10,15 @@ export const getProductBySlug = async (slug: String): Promise<IProduct | null> =
     if (!product) {
         return null;
     }
+
+    product.images = product.images.map(image => {
+        return image.includes('http') ? image : `${process.env.HOST_NAME}/products/${image}`
+    })
+
     return JSON.parse(JSON.stringify(product));
 }
 
-interface ProductSlugs{
+interface ProductSlugs {
     slug: string;
 }
 
@@ -24,19 +29,32 @@ export const getAllProductSlugs = async (): Promise<ProductSlugs[]> => {
     return slugs;
 }
 
-export const getProductsByTerm  = async (term:string): Promise<IProduct[]> => {
+export const getProductsByTerm = async (term: string): Promise<IProduct[]> => {
     term = term.toString().toLocaleLowerCase();
     await db.connect();
-    const params  =  'title images price inStock slug -_id';
-    const products = await Product.find({$text:{$search:term}}).select(params).lean();
+    const params = 'title images price inStock slug -_id';
+    const products = await Product.find({ $text: { $search: term } }).select(params).lean();
     await db.disconnect();
-    return products;
+
+    const updatedProducts = products.map(product => {
+        product.images = product.images.map(image => {
+            return image.includes('http') ? image : `${process.env.HOST_NAME}/products/${image}`
+        })
+        return product;
+    })
+    return updatedProducts;
 }
 
-export const getAllProducts  = async (): Promise<IProduct[]> => {
+export const getAllProducts = async (): Promise<IProduct[]> => {
     await db.connect();
-    const params  =  'title images price inStock slug -_id';
+    const params = 'title images price inStock slug -_id';
     const products = await Product.find().select(params).lean();
     await db.disconnect();
-    return products;
+    const updatedProducts = products.map(product => {
+        product.images = product.images.map(image => {
+            return image.includes('http') ? image : `${process.env.HOST_NAME}/products/${image}`
+        })
+        return product;
+    })
+    return  JSON.parse(JSON.stringify((updatedProducts)));
 }
