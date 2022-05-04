@@ -32,10 +32,12 @@ const Dashboard = () => {
         }
     },[])
 
+
     if (!error && !data) {
         return <h1>loading...</h1>;
     }
     if (error) {
+        console.log(data)
         console.log(error);
         return <Typography>error loading information</Typography>;
     }
@@ -46,7 +48,7 @@ const Dashboard = () => {
         numberOfClients,
         numberOfProducts,
         productsWidthNoInventory,
-        lowInventory: losInventory,
+        lowInventory,
         notPaidOrders,
     } = data!;
 
@@ -84,7 +86,7 @@ const Dashboard = () => {
                     icon={<CancelPresentationOutlined color="warning" sx={{ fontSize: 40 }} />}
                 />
                 <SummaryTile
-                    title={losInventory}
+                    title={lowInventory}
                     subTitle="Products in stock"
                     icon={<ProductionQuantityLimitsOutlined color="warning" sx={{ fontSize: 40 }} />}
                 />
