@@ -36,7 +36,7 @@ docker compose up -d
 npm run dev
 
 ```
-## To load the data into mongo open: [http://localhost:3000/api/seed](http://localhost:3000/api/seed) 
+To load the data into mongo open: [http://localhost:3000/api/seed](http://localhost:3000/api/seed) 
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
